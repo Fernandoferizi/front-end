@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro - PataSolidárias</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      background-color: #f9f9f9;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #ff6f61;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .user-type {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .user-type button {
+      flex: 1;
+      margin: 0 5px;
+      padding: 10px;
+      border: none;
+      background-color: #eee;
+      cursor: pointer;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    .user-type button.active {
+      background-color: #ff6f61;
+      color: white;
+    }
+
+    .form-section {
+      display: none;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    .btn-submit {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #ff6f61;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .back-link {
+      color: #ff6f61;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div style="text-align:left; margin-bottom: 10px;">
+      <a href="index.html" class="back-link">&larr; Voltar para Home</a>
+    </div>
+
+    <h2>Cadastro</h2>
+
+    <div class="user-type">
+      <button id="btnOng" class="active">Sou ONG</button>
+      <button id="btnColaborador">Sou Colaborador</button>
+    </div>
+
+    <!-- Formulário ONG -->
+    <form id="formOng" class="form-section active">
+      <label for="nomeOng">Nome da ONG</label>
+      <input type="text" id="nomeOng" required>
+
+      <label for="cnpj">CNPJ</label>
+      <input type="text" id="cnpj" required>
+
+      <label for="emailOng">E-mail</label>
+      <input type="email" id="emailOng" required>
+
+      <label for="cidadeOng">Cidade</label>
+      <input type="text" id="cidadeOng" required>
+
+      <label for="estadoOng">Estado</label>
+      <input type="text" id="estadoOng" required>
+
+      <label for="senhaOng">Senha</label>
+      <input type="password" id="senhaOng" required>
+
+      <button class="btn-submit" type="submit">Cadastrar ONG</button>
+    </form>
+
+    <!-- Formulário Colaborador -->
+    <form id="formColab" class="form-section">
+      <label for="tipo">Tipo de Colaborador</label>
+      <select id="tipo">
+        <option value="anonimo">Anônimo</option>
+        <option value="voluntario">Voluntário</option>
+        <option value="veterinario">Veterinário</option>
+        <option value="petshop">Petshop</option>
+      </select>
+
+      <label for="nomeColab">Nome</label>
+      <input type="text" id="nomeColab" required>
+
+      <label for="emailColab">E-mail</label>
+      <input type="email" id="emailColab" required>
+
+      <label for="enderecoColab">Endereço</label>
+      <input type="text" id="enderecoColab" required>
+
+      <label for="senhaColab">Senha</label>
+      <input type="password" id="senhaColab" required>
+
+      <button class="btn-submit" type="submit">Cadastrar Colaborador</button>
+    </form>
+  </div>
+
+  <!-- JS embutido direto na página -->
+  <script>
+    const btnOng = document.getElementById('btnOng');
+    const btnColab = document.getElementById('btnColaborador');
+    const formOng = document.getElementById('formOng');
+    const formColab = document.getElementById('formColab');
+
+    // Alternar visualização dos formulários ao clicar nos botões
+    btnOng.addEventListener('click', () => {
+      btnOng.classList.add('active');
+      btnColab.classList.remove('active');
+      formOng.classList.add('active');
+      formColab.classList.remove('active');
+    });
+
+    btnColab.addEventListener('click', () => {
+      btnColab.classList.add('active');
+      btnOng.classList.remove('active');
+      formColab.classList.add('active');
+      formOng.classList.remove('active');
+    });
+
+    // Cadastro ONG
+    formOng.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const nomeOng = document.getElementById('nomeOng').value.trim();
+      const cnpj = document.getElementById('cnpj').value.trim();
+      const emailOng = document.getElementById('emailOng').value.trim();
+      const cidadeOng = document.getElementById('cidadeOng').value.trim();
+      const estadoOng = document.getElementById('estadoOng').value.trim();
+      const senhaOng = document.getElementById('senhaOng').value.trim();
+
+      let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+      if (usuarios.some(u => u.email === emailOng)) {
+        alert('Este e-mail já está cadastrado!');
+        return;
+      }
+
+      const usuario = {
+        tipo: 'ong',
+        nome: nomeOng,
+        cnpj: cnpj,
+        email: emailOng,
+        cidade: cidadeOng,
+        estado: estadoOng,
+        senha: senhaOng
+      };
+
+      usuarios.push(usuario);
+      localStorage.setItem('usuarios', JSON.stringify(usuarios));
+
+      alert('Cadastro da ONG realizado com sucesso!');
+      window.location.href = 'login.html';
+    });
+
+    // Cadastro Colaborador
+    formColab.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const tipoColab = document.getElementById('tipo').value;
+      const nomeColab = document.getElementById('nomeColab').value.trim();
+      const emailColab = document.getElementById('emailColab').value.trim();
+      const enderecoColab = document.getElementById('enderecoColab').value.trim();
+      const senhaColab = document.getElementById('senhaColab').value.trim();
+
+      let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+      if (usuarios.some(u => u.email === emailColab)) {
+        alert('Este e-mail já está cadastrado!');
+        return;
+      }
+
+      const usuario = {
+        tipo: 'colaborador',
+        tipoColab: tipoColab,
+        nome: nomeColab,
+        email: emailColab,
+        endereco: enderecoColab,
+        senha: senhaColab
+      };
+
+      usuarios.push(usuario);
+      localStorage.setItem('usuarios', JSON.stringify(usuarios));
+
+      alert('Cadastro do Colaborador realizado com sucesso!');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Painel ONG - PataSolidárias</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      background: #f9f9f9;
+    }
+    nav {
+      width: 220px;
+      background-color: #ff6f61;
+      color: white;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    nav h2 {
+      margin-top: 0;
+      margin-bottom: 40px;
+      font-size: 24px;
+      text-align: center;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav ul li {
+      margin-bottom: 20px;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    nav ul li:hover, nav ul li.active {
+      background-color: #e6554f;
+    }
+    main {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    section {
+      display: none;
+    }
+    section.active {
+      display: block;
+    }
+    h3 {
+      color: #ff6f61;
+    }
+    /* simples formatação para posts e necessidades */
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0 15px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    button {
+      background-color: #ff6f61;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    ul.lista-fotos {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    ul.lista-fotos li {
+      width: 120px;
+      height: 120px;
+      background: #ddd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #666;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <h2>Menu ONG</h2>
+    <ul>
+      <li class="active" data-section="posts">Posts</li>
+      <li data-section="fotos">Fotos</li>
+      <li data-section="necessidades">Necessidades</li>
+    </ul>
+  </nav>
+
+  <main>
+    <section id="posts" class="active">
+      <h3>Posts pedindo ajuda</h3>
+      <form id="postForm">
+        <textarea id="postText" rows="4" placeholder="Escreva um pedido de ajuda..."></textarea>
+        <button type="submit">Postar</button>
+      </form>
+      <div id="postList"></div>
+    </section>
+
+    <section id="fotos">
+      <h3>Fotos dos animais</h3>
+
+      <!-- FORMULÁRIO PARA ADICIONAR FOTO POR URL - ADICIONADO -->
+      <form id="fotoForm">
+        <input type="text" id="fotoUrl" placeholder="Cole a URL da foto" />
+        <button type="submit">Adicionar Foto</button>
+      </form>
+
+      <ul class="lista-fotos" id="fotoList">
+        <li>Sem fotos ainda</li>
+      </ul>
+    </section>
+
+    <section id="necessidades">
+      <h3>O que mais precisamos</h3>
+      <form id="necessidadeForm">
+        <input type="text" id="necessidadeText" placeholder="Ex: Ração, medicamentos, cobertores..." />
+        <button type="submit">Adicionar</button>
+      </form>
+      <ul id="necessidadeList"></ul>
+    </section>
+  </main>
+
+  <script>
+    // Troque essa variável pelo email da ONG logada (deve vir do login)
+    const ongEmail = 'email_da_ong_logada@exemplo.com';
+
+    const menuItems = document.querySelectorAll('nav ul li');
+    const sections = document.querySelectorAll('main section');
+
+    menuItems.forEach(item => {
+      item.addEventListener('click', () => {
+        menuItems.forEach(i => i.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+
+        item.classList.add('active');
+        document.getElementById(item.dataset.section).classList.add('active');
+      });
+    });
+
+    // Função para carregar dados da ONG do localStorage
+    function carregarDados() {
+      const dadosOngs = JSON.parse(localStorage.getItem('dadosOngs')) || {};
+      return dadosOngs[ongEmail] || { posts: [], fotos: [], necessidades: [] };
+    }
+
+    // Função para salvar dados da ONG no localStorage
+    function salvarDados(dados) {
+      const dadosOngs = JSON.parse(localStorage.getItem('dadosOngs')) || {};
+      dadosOngs[ongEmail] = dados;
+      localStorage.setItem('dadosOngs', JSON.stringify(dadosOngs));
+    }
+
+    // Dados atuais da ONG na sessão
+    let dadosAtuais = carregarDados();
+
+    // Exibir posts na tela
+    function exibirPosts() {
+      const postList = document.getElementById('postList');
+      postList.innerHTML = '';
+      if(dadosAtuais.posts.length === 0) {
+        postList.textContent = 'Nenhum post ainda.';
+      } else {
+        dadosAtuais.posts.forEach(text => {
+          const div = document.createElement('div');
+          div.style.padding = '10px';
+          div.style.marginBottom = '10px';
+          div.style.border = '1px solid #ccc';
+          div.textContent = text;
+          postList.appendChild(div);
+        });
+      }
+    }
+
+    // Exibir necessidades na tela
+    function exibirNecessidades() {
+      const necessidadeList = document.getElementById('necessidadeList');
+      necessidadeList.innerHTML = '';
+      if(dadosAtuais.necessidades.length === 0) {
+        necessidadeList.innerHTML = '<li>Sem necessidades listadas.</li>';
+      } else {
+        dadosAtuais.necessidades.forEach(n => {
+          const li = document.createElement('li');
+          li.textContent = n;
+          necessidadeList.appendChild(li);
+        });
+      }
+    }
+
+    // Exibir fotos na tela
+    function exibirFotos() {
+      const fotoList = document.getElementById('fotoList');
+      fotoList.innerHTML = '';
+      if(dadosAtuais.fotos.length === 0) {
+        fotoList.innerHTML = '<li>Sem fotos ainda</li>';
+      } else {
+        dadosAtuais.fotos.forEach(url => {
+          const li = document.createElement('li');
+          const img = document.createElement('img');
+          img.src = url;
+          img.style.maxWidth = '100%';
+          img.style.height = 'auto';
+          li.appendChild(img);
+          fotoList.appendChild(li);
+        });
+      }
+    }
+
+    // Inicializa a exibição dos dados
+    exibirPosts();
+    exibirNecessidades();
+    exibirFotos();
+
+    // Submeter novo post
+    const postForm = document.getElementById('postForm');
+    postForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const text = document.getElementById('postText').value.trim();
+      if(text) {
+        dadosAtuais.posts.unshift(text); // adiciona no início
+        salvarDados(dadosAtuais);
+        exibirPosts();
+        postForm.reset();
+      }
+    });
+
+    // Submeter nova necessidade
+    const necessidadeForm = document.getElementById('necessidadeForm');
+    necessidadeForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const necessidade = document.getElementById('necessidadeText').value.trim();
+      if(necessidade) {
+        dadosAtuais.necessidades.push(necessidade);
+        salvarDados(dadosAtuais);
+        exibirNecessidades();
+        necessidadeForm.reset();
+      }
+    });
+
+    // SUBMIT FORM FOTO - ADICIONADO
+    const fotoForm = document.getElementById('fotoForm');
+    fotoForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const fotoUrlInput = document.getElementById('fotoUrl');
+      const url = fotoUrlInput.value.trim();
+      if(url) {
+        dadosAtuais.fotos.push(url);
+        salvarDados(dadosAtuais);
+        exibirFotos();
+        fotoForm.reset();
+      }
+    });
+  </script>
+
+<script src="js/direcionamento.js"></script>
+
+</body>
+</html>

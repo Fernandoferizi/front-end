@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PataSolidárias</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      background-color: #ff6f61;
+      color: white;
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    nav {
+      float: right;
+    }
+
+    nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a.btn {
+      background-color: #fff;
+      color: #ff6f61;
+      padding: 8px 16px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    main.hero, section.como-funciona {
+      flex-grow: 1;
+    }
+
+    .hero {
+      background-color: #fff3f0;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      margin-bottom: 30px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-primary {
+      background-color: #ff6f61;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      text-decoration: none;
+    }
+
+    .como-funciona {
+      background-color: #ffffff;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .como-funciona h3 {
+      font-size: 28px;
+      margin-bottom: 40px;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .step {
+      background-color: #fff3f0;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .step h4 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+      /* não precisa de margin-top pois o flex empurra para baixo */
+    }
+
+    @media(min-width: 768px) {
+      .steps {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1 class="logo">PataSolidárias</h1>
+      <nav>
+        <a href="login.html">Login</a>
+        <a href="cadastro.html" class="btn">Cadastro</a>
+      </nav>
+      <div style="clear: both;"></div>
+    </div>
+  </header>
+
+  <main class="hero">
+    <section class="intro">
+      <h2>Transformando Vidas: ONGs e Colaboradores Conectados</h2>
+      <p>
+        O PataSolidárias é uma plataforma que une ONGs de proteção animal a voluntários, veterinários, petshops e pessoas que desejam ajudar. 
+        Aqui, você pode divulgar pedidos de ajuda, oferecer suporte e conhecer as ONGs mais próximas da sua região.
+      </p>
+      <a href="cadastro.html" class="btn-primary">Quero Ajudar</a>
+    </section>
+  </main>
+
+  <section class="como-funciona">
+    <div class="container">
+      <h3>Como Funciona?</h3>
+      <div class="steps">
+        <div class="step">
+          <h4>1. Cadastre-se</h4>
+          <p>Como ONG ou colaborador (voluntário, veterinário, petshop ou anônimo).</p>
+        </div>
+        <div class="step">
+          <h4>2. Conecte-se</h4>
+          <p>ONGs publicam suas necessidades e colaboradores veem como podem ajudar.</p>
+        </div>
+        <div class="step">
+          <h4>3. Faça a Diferença</h4>
+          <p>Ajude com doações, tempo, serviços ou produtos. Cada gesto conta!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 PataSolidárias. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+</body>
+</html>

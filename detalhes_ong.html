@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Detalhes ONG - PataSolidárias</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #fafafa;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h2 {
+      color: #ff6f61;
+      margin-bottom: 5px;
+    }
+    section {
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+    }
+    ul.lista-fotos {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    ul.lista-fotos li {
+      width: 120px;
+      height: 120px;
+      background: #ddd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #666;
+      border-radius: 6px;
+      font-size: 14px;
+      overflow: hidden;
+    }
+    ul.lista-fotos li img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 id="nomeOng">Carregando...</h2>
+  <div id="emailOng" style="margin-bottom: 20px; color: #777;"></div>
+
+  <section>
+    <h3>Posts da ONG</h3>
+    <div id="postsList">Carregando...</div>
+  </section>
+
+  <section>
+    <h3>Fotos dos Animais</h3>
+    <ul class="lista-fotos" id="fotosList">
+      <li>Carregando fotos...</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>Necessidades</h3>
+    <ul id="necessidadesList">
+      <li>Carregando necessidades...</li>
+    </ul>
+  </section>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const ongEmail = params.get('ong');
+
+    if (!ongEmail) {
+      alert('ONG não especificada.');
+      // Poderia redirecionar para dashboard_colaborador.html
+    }
+
+    let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+    let ong = usuarios.find(u => u.tipo === 'ong' && u.email === ongEmail);
+
+    if (!ong) {
+      alert('ONG não encontrada.');
+      document.getElementById('nomeOng').textContent = 'ONG não encontrada';
+      document.getElementById('postsList').textContent = '';
+      document.getElementById('fotosList').innerHTML = '';
+      document.getElementById('necessidadesList').innerHTML = '';
+    } else {
+      document.getElementById('nomeOng').textContent = ong.nome || 'Sem nome';
+      document.getElementById('emailOng').textContent = ong.email || '';
+
+      // Render posts
+      const postsList = document.getElementById('postsList');
+      postsList.innerHTML = '';
+      if (!ong.posts || ong.posts.length === 0) {
+        postsList.textContent = 'Sem posts por enquanto.';
+      } else {
+        ong.posts.slice().reverse().forEach(post => {
+          const div = document.createElement('div');
+          div.style.padding = '10px';
+          div.style.marginBottom = '10px';
+          div.style.border = '1px solid #ccc';
+          div.textContent = post;
+          postsList.appendChild(div);
+        });
+      }
+
+      // Render fotos
+      const fotosList = document.getElementById('fotosList');
+      fotosList.innerHTML = '';
+      if (!ong.fotos || ong.fotos.length === 0) {
+        fotosList.innerHTML = '<li>Sem fotos por enquanto.</li>';
+      } else {
+        ong.fotos.forEach(url => {
+          const li = document.createElement('li');
+          const img = document.createElement('img');
+          img.src = url;
+          img.alt = `Foto ONG ${ong.nome}`;
+          li.appendChild(img);
+          fotosList.appendChild(li);
+        });
+      }
+
+      // Render necessidades
+      const necessidadesList = document.getElementById('necessidadesList');
+      necessidadesList.innerHTML = '';
+      if (!ong.necessidades || ong.necessidades.length === 0) {
+        necessidadesList.innerHTML = '<li>Sem necessidades por enquanto.</li>';
+      } else {
+        ong.necessidades.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          necessidadesList.appendChild(li);
+        });
+      }
+    }
+  </script>
+
+  <script src="js/direcionamento.js"></script>
+
+</body>
+</html>
